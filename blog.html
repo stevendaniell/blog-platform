@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Blog Platform</title>
+    
+</head>
+<body>
+    <h1>Simple Blog</h1>
+    
+    <div class="form-container">
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Your name...">
+        
+        <label for="postContent">Write your post:</label>
+        <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+        
+        <button onclick="addPost()">Post</button>
+        <div id="message"></div>
+    </div>
+
+    <div class="posts-container">
+        <h2>Posts</h2>
+        <div id="postsList"></div>
+    </div>
+
+    <script>
+        function showMessage(text, isError = false) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = isError ? 'error' : 'success';
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        function addPost() {
+            const username = document.getElementById('username').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+
+            if (!username || !content) {
+                showMessage('Please fill both username and post content!', true);
+                return;
+            }
+
+            const post = {
+                username: username,
+                content: content,
+                timestamp: new Date().toLocaleString()
+            };
+
+            const postsList = document.getElementById('postsList');
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            postDiv.innerHTML = `
+                <div class="post-author">${post.username}</div>
+                <div class="post-content">${post.content}</div>
+                <small style="color: #666;">${post.timestamp}</small>
+            `;
+            postsList.insertBefore(postDiv, postsList.firstChild);  // Newest first
+
+            
+            document.getElementById('username').value = '';
+            document.getElementById('postContent').value = '';
+
+            showMessage('Post added successfully!');
+        }
+
+        document.addEventListener('keypress', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                addPost();
+            }
+        });
+    </script>
+</body>
+</html>
